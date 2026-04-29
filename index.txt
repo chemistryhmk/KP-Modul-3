@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контрольна робота за модулем 3: Хімія металів</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #161e2d;
+            --accent-color: #38bdf8;
+            --text-color: #f1f5f9;
+            --error-color: #ef4444;
+            --success-color: #22c55e;
+            --border-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.07) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 850px;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .screen { display: none; }
+        .active { display: block; }
+
+        h1, h2 { color: var(--accent-color); text-align: center; font-weight: 800; }
+        h1 { font-size: 1.6rem; line-height: 1.2; margin-bottom: 0.5rem; }
+        .subtitle { text-align: center; font-size: 0.95rem; opacity: 0.7; margin-bottom: 2rem; }
+
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 1rem; color: var(--accent-color); }
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid var(--border-color);
+            background: #0b0f19;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1.1rem;
+            background: var(--accent-color);
+            color: #0b0f19;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .btn:hover { background: #7dd3fc; transform: translateY(-1px); }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .timer { font-weight: 700; color: var(--error-color); font-size: 1.2rem; }
+        .progress-bar { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; margin-bottom: 1.5rem; }
+        .progress-fill { height: 100%; background: var(--accent-color); border-radius: 3px; width: 0%; transition: width 0.3s; }
+
+        .q-text { font-size: 1.25rem; font-weight: 600; line-height: 1.4; margin-bottom: 1.8rem; }
+
+        .options-grid { display: grid; gap: 0.75rem; }
+        .option {
+            padding: 1rem;
+            background: #1e293b;
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.05rem;
+        }
+        .option:hover { background: #2d3e5a; }
+        .option.selected { border-color: var(--accent-color); background: #161e2d; }
+
+        .match-row { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 12px; align-items: center; margin-bottom: 10px; }
+        .match-item { background: #1e293b; padding: 12px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #334155; }
+        select { background: #0b0f19; color: white; padding: 10px; border-radius: 6px; border: 1px solid var(--accent-color); font-size: 0.9rem; width: 100%; }
+
+        #certificate {
+            background: #fff;
+            color: #000;
+            padding: 40px;
+            border: 8px double #0b0f19;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #certificate, #certificate * { visibility: visible; }
+            #certificate { position: absolute; left: 0; top: 0; width: 100%; border: none; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;" onselectstart="return false;" oncopy="return false;">
+
+<div class="container">
+    <!-- Слайд 1: Титул -->
+    <div id="screen-start" class="screen active">
+        <h1>Контрольна робота за модулем 3</h1>
+        <div class="subtitle">
+            Дисципліна: Загальна хімія металів і сплавів<br>
+            Спеціальність: Прикладна механіка<br>
+            ОПП: Технологія зварювального виробництва та контроль якості зварних конструкцій
+        </div>
+        <div class="input-group">
+            <label>Прізвище та Ім'я студента:</label>
+            <input type="text" id="student-name" placeholder="Введіть ваше ПІБ...">
+        </div>
+        <div style="background: rgba(56, 189, 248, 0.1); padding: 1.2rem; border-radius: 0.5rem; margin-bottom: 2rem; border: 1px dashed var(--accent-color); font-size: 0.9rem; line-height: 1.6;">
+            <b>Параметри тестування:</b><br>
+            • Кількість запитань: <b>30</b><br>
+            • Загальний час: <b>60 хвилин</b><br>
+            • Максимальна оцінка: <b>40 балів</b><br>
+            • Захист: Копіювання та контекстне меню вимкнено.
+        </div>
+        <button class="btn" onclick="startTest()">Почати виконання</button>
+    </div>
+
+    <!-- Слайд Тесту -->
+    <div id="screen-test" class="screen">
+        <div class="question-header">
+            <span id="q-number" style="opacity: 0.7;">Питання 1/30</span>
+            <div class="timer" id="timer-display">60:00</div>
+        </div>
+        <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+        <div id="question-container"></div>
+        <button class="btn" id="next-btn" onclick="nextQuestion()" style="margin-top: 2rem;">Підтвердити відповідь</button>
+    </div>
+
+    <!-- Слайд Результату -->
+    <div id="screen-result" class="screen">
+        <h2>Результати тестування</h2>
+        <div id="result-info" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.1rem;"></div>
+        
+        <div id="certificate-area">
+            <div id="certificate">
+                <h2 style="color: black; margin-bottom: 5px;">СЕРТИФІКАТ</h2>
+                <p>Про успішне виконання контрольної роботи за модулем 3</p>
+                <div style="border-bottom: 1px solid #000; width: 80%; margin: 20px auto;">
+                    <h3 id="cert-name" style="margin: 5px 0;">Прізвище Ім'я</h3>
+                </div>
+                <p>Предмет: Загальна хімія металів і сплавів</p>
+                <p>Спеціальність: Прикладна механіка</p>
+                <div style="font-size: 1.5rem; font-weight: bold; margin: 20px 0; border: 2px solid #000; display: inline-block; padding: 10px 30px;">
+                    Результат: <span id="cert-score">0</span> / 40 балів
+                </div>
+                <p id="cert-time" style="font-size: 0.85rem; margin-top: 15px;"></p>
+                <p style="font-size: 0.7rem; color: #666;">ID: <span id="cert-id"></span></p>
+            </div>
+        </div>
+        
+        <button class="btn" onclick="window.print()" style="margin-top: 1.5rem; background: var(--success-color);">Завантажити результат (PDF)</button>
+    </div>
+</div>
+
+<script>
+    // Питання на основі ПДФ та специфіки зварювання
+    const questions = [
+        // 15 одиночних (1 бал) = 15
+        { type: 'single', q: "Який метал головних підгруп І-ІІІ груп є найбільш розповсюдженим у земній корі?", options: ["Залізо", "Алюміній", "Магній", "Кальцій"], correct: 1, points: 1 },
+        { type: 'single', q: "Вкажіть електронну конфігурацію зовнішнього електронного шару лужних металів:", options: ["ns2", "ns1", "ns2 np1", "ns2 np6"], correct: 1, points: 1 },
+        { type: 'single', q: "Чому лужні метали зберігають під шаром гасу або вазелінової олії?", options: ["Для запобігання випаровуванню", "Через високу реакційну здатність до O2 та H2O", "Для підвищення їх твердості", "Це вимога пожежної безпеки"], correct: 1, points: 1 },
+        { type: 'single', q: "Яку температуру плавлення має оксидна плівка алюмінію (Al2O3), що заважає зварюванню?", options: ["660°C", "1050°C", "2050°C", "3500°C"], correct: 2, points: 1 },
+        { type: 'single', q: "Як змінюються відновлювальні властивості металів у головних підгрупах зверху вниз?", options: ["Посилюються", "Послаблюються", "Не змінюються", "Зникають"], correct: 0, points: 1 },
+        { type: 'single', q: "Вкажіть колір, у який іони Калію забарвлюють полум'я:", options: ["Жовтий", "Цегляно-червоний", "Фіолетовий (блідо-рожевий)", "Карміново-червоний"], correct: 2, points: 1 },
+        { type: 'single', q: "Яка сполука зумовлює тимчасову твердість води?", options: ["Ca(HCO3)2", "CaCl2", "MgSO4", "Na2SO4"], correct: 0, points: 1 },
+        { type: 'single', q: "Алюмінотермія — це метод отримання металів шляхом відновлення їх оксидів за допомогою:", options: ["Водню", "Вуглецю", "Алюмінію", "Магнію"], correct: 2, points: 1 },
+        { type: 'single', q: "Який метал є основним легуючим елементом у сплаві 'дюралюмін'?", options: ["Мідь", "Свинець", "Цинк", "Хром"], correct: 0, points: 1 },
+        { type: 'single', q: "Ступінь окиснення алюмінію в його сполуках становить:", options: ["+1", "+2", "+3", "-3"], correct: 2, points: 1 },
+        { type: 'single', q: "Яка речовина утворюється при горінні натрію в надлишку кисню?", options: ["Na2O", "Na2O2", "NaOH", "NaO2"], correct: 1, points: 1 },
+        { type: 'single', q: "Найлегший метал, що використовується в авіаційних зварних конструкціях:", options: ["Магній", "Літій", "Алюміній", "Титан"], correct: 1, points: 1 },
+        { type: 'single', q: "При взаємодії алюмінію з розчином лугу утворюється:", options: ["Al(OH)3", "Комплексна сіль і водень", "Оксид алюмінію", "Гідрид алюмінію"], correct: 1, points: 1 },
+        { type: 'single', q: "Метали якої групи називаються лужноземельними?", options: ["I-A (крім Li)", "II-A (Ca, Sr, Ba, Ra)", "III-A", "Перехідні метали"], correct: 1, points: 1 },
+        { type: 'single', q: "Як називається процес руйнування металів під впливом зовнішнього середовища?", options: ["Електроліз", "Корозія", "Легування", "Гідроліз"], correct: 1, points: 1 },
+
+        // 10 множинних (1.5 бали) = 15
+        { type: 'multiple', q: "Оберіть фізичні властивості, характерні для лужних металів:", options: ["Висока густина", "Низька температура плавлення", "М'якість (ріжуться ножем)", "Висока твердість", "Висока електропровідність"], correct: [1, 2, 4], points: 1.5 },
+        { type: 'multiple', q: "Які з перелічених елементів відносяться до головної підгрупи II групи (s-елементи)?", options: ["Mg", "Ca", "Zn", "Ba", "Cd"], correct: [0, 1, 3], points: 1.5 },
+        { type: 'multiple', q: "Які труднощі виникають при зварюванні алюмінію та його сплавів?", options: ["Наявність тугоплавкої плівки Al2O3", "Висока теплопровідність", "Схильність до утворення гарячих тріщин", "Низька швидкість плавлення"], correct: [0, 1, 2], points: 1.5 },
+        { type: 'multiple', q: "Оберіть амфотерні оксиди:", options: ["Na2O", "Al2O3", "BeO", "CaO", "MgO"], correct: [1, 2], points: 1.5 },
+        { type: 'multiple', q: "Вкажіть способи усунення загальної твердості води:", options: ["Кип'ятіння", "Додавання соди (Na2CO3)", "Фільтрація через пісок", "Йонообмінний метод (катіоніти)"], correct: [0, 1, 3], points: 1.5 },
+        { type: 'multiple', q: "Які метали реагують з водою за звичайних умов з виділенням водню?", options: ["Al", "Na", "Ca", "Fe", "K"], correct: [1, 2, 4], points: 1.5 },
+        { type: 'multiple', q: "Продуктами електролізу розплаву магній хлориду (MgCl2) є:", options: ["Mg", "Cl2", "Mg(OH)2", "H2"], correct: [0, 1], points: 1.5 },
+        { type: 'multiple', q: "Оберіть мінерали, що містять Алюміній:", options: ["Боксит", "Кріоліт", "Галіт", "Корунд", "Сільвініт"], correct: [0, 1, 3], points: 1.5 },
+        { type: 'multiple', q: "Застосування Магнію в техніці обумовлено:", options: ["Надзвичайною легкістю сплавів", "Високою корозійною стійкістю", "Високою питомою міцністю", "Здатністю горіти сліпучим полум'ям (піротехніка)"], correct: [0, 2, 3], points: 1.5 },
+        { type: 'multiple', q: "Вкажіть метали ІІІ-А підгрупи:", options: ["Sc", "Al", "Ga", "In", "Y"], correct: [1, 2, 3], points: 1.5 },
+
+        // 5 відповідність (2 бали) = 10
+        { 
+            type: 'match', q: "Встановіть відповідність між металом та кольором його полум'я:", 
+            left: ["Li", "Na", "Ba", "Sr"], 
+            right: ["Жовтий", "Карміново-червоний", "Яблучно-зелений", "Світло-червоний"],
+            correct: {0: 1, 1: 0, 2: 2, 3: 3}, points: 2 
+        },
+        { 
+            type: 'match', q: "Встановіть відповідність між назвою та хімічною формулою:", 
+            left: ["Негашене вапно", "Каустична сода", "Гіпс", "Кріоліт"], 
+            right: ["CaSO4·2H2O", "Na3[AlF6]", "CaO", "NaOH"],
+            correct: {0: 2, 1: 3, 2: 0, 3: 1}, points: 2 
+        },
+        { 
+            type: 'match', q: "Зіставте метал з його характеристикою:", 
+            left: ["Цезій", "Берилій", "Алюміній", "Магній"], 
+            right: ["Найбільш активний стабільний лужний метал", "Найпоширеніший метал у корі", "Токсичний метал ІІ групи", "Компонент піротехнічних сумішей"],
+            correct: {0: 0, 1: 2, 2: 1, 3: 3}, points: 2 
+        },
+        { 
+            type: 'match', q: "Зіставте метод отримання з його суттю:", 
+            left: ["Електроліз", "Пірометалургія", "Гідрометалургія", "Металотермія"], 
+            right: ["Відновлення металів з розчинів солей", "Відновлення металів за допомогою струму", "Відновлення з руд при високих t", "Відновлення металів активнішими металами"],
+            correct: {0: 1, 1: 2, 2: 0, 3: 3}, points: 2 
+        },
+        { 
+            type: 'match', q: "Встановіть відповідність між реагентом та продуктом реакції з водою:", 
+            left: ["Na", "Ca", "Na2O", "CaO"], 
+            right: ["NaOH + H2", "Ca(OH)2 + H2", "NaOH", "Ca(OH)2"],
+            correct: {0: 0, 1: 1, 2: 2, 3: 3}, points: 2 
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+    let timeLeft = 3600; 
+    let timer;
+    let studentName = "";
+
+    // Захист від гарячих клавіш
+    window.addEventListener('keydown', e => {
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 's')) e.preventDefault();
+    });
+
+    function startTest() {
+        const nameInput = document.getElementById('student-name').value.trim();
+        if (nameInput.length < 5) { alert("Будь ласка, введіть повне Прізвище та Ім'я!"); return; }
+        studentName = nameInput;
+        document.getElementById('screen-start').classList.remove('active');
+        document.getElementById('screen-test').classList.add('active');
+        startTimer();
+        renderQuestion();
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            timeLeft--;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if (timeLeft <= 0) finishTest();
+        }, 1000);
+    }
+
+    function renderQuestion() {
+        const data = questions[currentQ];
+        const container = document.getElementById('question-container');
+        document.getElementById('q-number').innerText = `Питання ${currentQ + 1} з ${questions.length}`;
+        document.getElementById('progress').style.width = `${(currentQ / questions.length) * 100}%`;
+        
+        let html = `<div class="q-text">${data.q}</div>`;
+
+        if (data.type === 'single') {
+            html += `<div class="options-grid">` + data.options.map((o, i) => `<div class="option" onclick="selectSingle(${i})">${o}</div>`).join('') + `</div>`;
+        } else if (data.type === 'multiple') {
+            html += `<p style="color:var(--accent-color); font-size:0.8rem; margin-bottom:10px;">* Оберіть декілька варіантів</p><div class="options-grid">` + data.options.map((o, i) => `<div class="option" onclick="selectMulti(${i})">${o}</div>`).join('') + `</div>`;
+        } else if (data.type === 'match') {
+            html += `<p style="color:var(--accent-color); font-size:0.8rem; margin-bottom:10px;">* Встановіть логічні пари</p>` + data.left.map((l, i) => `
+                <div class="match-row">
+                    <div class="match-item">${l}</div>
+                    <div style="text-align:center">&rarr;</div>
+                    <select id="m-${i}"><option value="">---</option>${data.right.map((r, ri) => `<option value="${ri}">${r}</option>`).join('')}</select>
+                </div>
+            `).join('');
+        }
+        container.innerHTML = html;
+        window.tempAnswer = null;
+        window.tempAnswers = [];
+    }
+
+    function selectSingle(i) {
+        document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('.option')[i].classList.add('selected');
+        window.tempAnswer = i;
+    }
+
+    function selectMulti(i) {
+        const el = document.querySelectorAll('.option')[i];
+        el.classList.toggle('selected');
+        const idx = window.tempAnswers.indexOf(i);
+        if (idx > -1) window.tempAnswers.splice(idx, 1);
+        else window.tempAnswers.push(i);
+    }
+
+    function nextQuestion() {
+        const data = questions[currentQ];
+        let p = 0;
+
+        if (data.type === 'single') {
+            if (window.tempAnswer === null) { alert("Оберіть відповідь!"); return; }
+            if (window.tempAnswer === data.correct) p = data.points;
+        } else if (data.type === 'multiple') {
+            if (window.tempAnswers.length === 0) { alert("Оберіть відповіді!"); return; }
+            const isMatch = window.tempAnswers.length === data.correct.length && window.tempAnswers.every(v => data.correct.includes(v));
+            if (isMatch) p = data.points;
+        } else if (data.type === 'match') {
+            let matches = 0;
+            for(let i=0; i<data.left.length; i++) {
+                const val = document.getElementById(`m-${i}`).value;
+                if (val === "") { alert("Заповніть всі відповідності!"); return; }
+                if (parseInt(val) === data.correct[i]) matches++;
+            }
+            p = (matches / data.left.length) * data.points;
+        }
+
+        score += p;
+        currentQ++;
+        if (currentQ < questions.length) renderQuestion();
+        else finishTest();
+    }
+
+    function finishTest() {
+        clearInterval(timer);
+        document.getElementById('screen-test').classList.remove('active');
+        document.getElementById('screen-result').classList.add('active');
+        
+        const finalScore = Math.round(score * 10) / 10;
+        const timeTaken = 3600 - timeLeft;
+        const m = Math.floor(timeTaken / 60);
+        const s = timeTaken % 60;
+
+        document.getElementById('cert-name').innerText = studentName;
+        document.getElementById('cert-score').innerText = finalScore;
+        document.getElementById('cert-time').innerText = `Дата: ${new Date().toLocaleDateString()} | Витрачено часу: ${m} хв ${s} сек`;
+        document.getElementById('cert-id').innerText = "M3-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        
+        document.getElementById('result-info').innerHTML = `Студент: <b>${studentName}</b>. <br> Результат: <b>${finalScore}</b> з 40 балів.`;
+    }
+</script>
+</body>
+</html>
